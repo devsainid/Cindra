@@ -1,15 +1,13 @@
-{
-  "name": "CINDRELLA",
-  "version": "1.0.0",
-  "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "fs": "0.0.1-security",
-    "node-fetch": "^3.3.2",
-    "telegraf": "^4.17.0"
-  }
-}
+--- a/package.json
++++ b/package.json
+@@ -1,6 +1,9 @@
+ {
+   "name": "Cindralla",
+   "version": "1.0.0",
++  "main": "index.js",
+   "type": "module",
+   "scripts": {
++    "start": "node index.js",
+     "test": "echo \"Error: no test specified\" && exit 1"
+   },
+   "dependencies": {
