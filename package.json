@@ -1,7 +1,7 @@
 {
-  "name": "Cindra",
+  "name": "cindra",
   "version": "1.0.0",
-  "description": "Telegram bot",
+  "description": "Telegram bot with co-owner and auto-forward features",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "node-fetch": "^3.3.2",
+    "fs": "^0.0.1-security",
     "telegraf": "^4.17.0"
   }
 }
