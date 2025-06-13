@@ -1,6 +1,7 @@
 import { Telegraf } from 'telegraf';
 import fs from 'fs';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -24,9 +25,14 @@ bot.command("add", (ctx) => {
   const username = parts[1];
   if (!isAdmin(id)) return ctx.reply("❌ You are not authorized.");
   if (!username) return ctx.reply("⚠️ Provide a username.");
-  coowners.push(username.replace("@", ""));
-  fs.writeFileSync("coowners.json", JSON.stringify(coowners));
-  ctx.reply(`✅ Added @${username} as co-owner.`);
+  const clean = username.replace("@", "");
+  if (!coowners.includes(clean)) {
+    coowners.push(clean);
+    fs.writeFileSync("coowners.json", JSON.stringify(coowners));
+    ctx.reply(`✅ Added @${clean} as co-owner.`);
+  } else {
+    ctx.reply(`⚠️ @${clean} is already a co-owner.`);
+  }
 });
 
 bot.command("unadd", (ctx) => {
@@ -35,35 +41,32 @@ bot.command("unadd", (ctx) => {
   const username = parts[1];
   if (!isAdmin(id)) return ctx.reply("❌ You are not authorized.");
   if (!username) return ctx.reply("⚠️ Provide a username.");
-  coowners = coowners.filter(u => u !== username.replace("@", ""));
+  const clean = username.replace("@", "");
+  coowners = coowners.filter(u => u !== clean);
   fs.writeFileSync("coowners.json", JSON.stringify(coowners));
-  ctx.reply(`❌ Removed @${username} from co-owner list.`);
+  ctx.reply(`❌ Removed @${clean} from co-owner list.`);
 });
 
 bot.on('text', async (ctx) => {
   const text = ctx.message.text.toLowerCase();
   const from = ctx.message.from;
 
-  // Auto reply in group if anyone says "hi", "hello"
+  // Auto-reply
   if (["hi", "hello"].includes(text)) {
     return ctx.reply(`Hello ${from.first_name}! How can I help you?`);
   }
 
-  // Forward all messages to owner and coowners
+  // Forward to owner + co-owners
   try {
-    await bot.telegram.sendMessage(ownerId, `Forwarded from ${from.username || from.first_name}: ${ctx.message.text}`);
+    await bot.telegram.sendMessage(ownerId, `From ${from.username || from.first_name}: ${ctx.message.text}`);
     for (const coowner of coowners) {
-      await bot.telegram.sendMessage(`@${coowner}`, `Forwarded from ${from.username || from.first_name}: ${ctx.message.text}`);
+      await bot.telegram.sendMessage(`@${coowner}`, `From ${from.username || from.first_name}: ${ctx.message.text}`);
     }
   } catch (e) {
-    console.error("Forwarding failed:", e.message);
+    console.log("Forwarding failed:", e.message);
   }
 });
 
-bot.launch();
-console.log("🤖 Bot is live with co-owner system!");
-bot.launch().then(() => {
-  console.log("🤖 Bot is live with co-owner support");
-}).catch(err => {
-  console.error("❌ Bot launch failed:", err);
-});
+bot.launch()
+  .then(() => console.log("🤖 Bot is LIVE"))
+  .catch(err => console.error("❌ Bot launch error:", err));
