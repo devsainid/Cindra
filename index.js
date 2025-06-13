@@ -62,3 +62,8 @@ bot.on('text', async (ctx) => {
 
 bot.launch();
 console.log("🤖 Bot is live with co-owner system!");
+bot.launch().then(() => {
+  console.log("🤖 Bot is live with co-owner support");
+}).catch(err => {
+  console.error("❌ Bot launch failed:", err);
+});
