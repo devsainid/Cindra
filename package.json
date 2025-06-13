@@ -1,7 +1,7 @@
 {
   "name": "cindra",
   "version": "1.0.0",
-  "description": "Telegram bot with co-owner and auto-forward features",
+  "description": "Telegram co-owner bot",
   "main": "index.js",
   "type": "module",
   "scripts": {
